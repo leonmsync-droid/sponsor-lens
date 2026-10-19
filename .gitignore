@@ -1,0 +1,8 @@
+# Secrets — never commit
+config.php
+.env
+
+# Local runtime files
+storage/
+*.log
+.DS_Store

@@ -1,0 +1,11 @@
+{
+  "_comment": "Entered by hand from each team's Liquipedia page (do not scrape). Keyed by PandaScore team id. Shown with 'Source: Liquipedia (CC-BY-SA 3.0)'.",
+  "_example": {
+    "123456": {
+      "sponsors": ["Example Energy", "Example Peripherals"],
+      "source": "https://liquipedia.net/counterstrike/Example_Team",
+      "checked": "2026-10-19"
+    }
+  },
+  "teams": {}
+}

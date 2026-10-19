@@ -1,0 +1,5 @@
+{
+  "_comment": "Fallback only: official Twitch or Kick channels for tournaments/leagues whose PandaScore matches list no official Twitch or Kick stream. Keys are PandaScore ids.",
+  "tournaments": {},
+  "leagues": {}
+}
