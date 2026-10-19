@@ -76,4 +76,5 @@ Check the PHP path with `which php` in cPanel's Terminal; it may be an `ea-php8x
 - [PandaScore](https://pandascore.co): tournaments, teams, schedule, results, stream lists. Only derived statistics are published.
 - [Twitch API](https://dev.twitch.tv/docs/api/) and [Kick API](https://docs.kick.com): live viewer counts on official streams.
 - [flag-icons](https://github.com/lipis/flag-icons) (MIT): country flags, served from `public/assets/flags`.
+- [Simple Icons](https://simpleicons.org) (CC0): Twitch and Kick icons in `public/assets/icons` (monochrome, plus `-color` versions in each brand's own colours), used only to label data sources. The brands' own guidelines still apply.
 - [Liquipedia](https://liquipedia.net/counterstrike/): sponsor lists, entered by hand in `data/sponsors.json` with source links (CC-BY-SA 3.0). Liquipedia pages are never scraped.

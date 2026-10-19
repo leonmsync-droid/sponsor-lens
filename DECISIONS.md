@@ -70,3 +70,9 @@ Team pages get a "Match load" section built only from schedule data we already s
 
 ## 2026-10-19 — SVG flags instead of emoji
 Emoji flags render differently per platform (Windows shows letters like "GB" instead of a flag). Switched to flag-icons 7.5.0 (MIT), all 271 4:3 SVGs self-hosted in `public/assets/flags` (licence alongside) so the CSP stays `img-src 'self'`. Files were scanned for scripts/external refs before adding. Shown as small rounded rectangles with a hairline edge; unknown codes show no flag.
+
+## 2026-10-20 — Accent moved off Kick's green; platform icons as source labels
+The accent was `#53fc18`, effectively Kick's brand green (`#53FC19`). With Kick logos on the page that would make Sponsor Lens look like a Kick product, so the accent is now chartreuse `#b4ff39` (light mode `#5a8a00`), which also separates it from the mint "above tier average" green. Twitch and Kick icons come from Simple Icons 16.33.0 (CC0), shown monochrome and small, only where the site names its data sources (hero description, footer, Methodology sources), with a non-affiliation note on the Methodology page. Official usage guidelines couldn't be verified (Twitch's brand page is script-rendered; Kick publishes none we could find); referential, unmodified, monochrome use is the conservative reading.
+
+## 2026-10-20 — Source strip logos in brand colours
+In the data-sources strip the logos use each brand's own colours: Twitch purple with the white bubble interior (as in the official Glitch logo; Simple Icons draws it as a cut-out), Kick green. Stored as `twitch-color.svg` / `kick-color.svg`. Footer and Methodology keep the small monochrome icons.

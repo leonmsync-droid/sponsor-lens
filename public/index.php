@@ -28,15 +28,31 @@ View::header('Team rankings', 'index.php');
   <h1><span class="accent">Most watched</span> tier-2 and tier-3 CS2 teams</h1>
   <p class="lede">Live audience rankings from official Twitch and Kick streams, for sponsors and the teams they back.</p>
   <p class="verdict now"><span class="now-label">Right now</span><?= Format::e(Verdict::rankings($rows, $tier)) ?></p>
-  <?php if ($ranked): $top = array_slice($ranked, 0, 3); $others = count($ranked) - count($top); ?>
+  <?php
+  // Top three ranked teams; until any team is ranked, the teams with the most tracked matches so far
+  // ($rows is already ordered by matches tracked when nobody has enough data).
+  $stack = $ranked ?: array_values(array_filter($rows, fn($r) => $r['tracked'] > 0));
+  if ($stack): $top = array_slice($stack, 0, 3); $others = count($stack) - count($top); ?>
     <div class="stack">
       <span class="avatars">
         <?php foreach ($top as $t): ?><a href="team.php?id=<?= (int) $t['id'] ?>" title="<?= Format::e($t['name']) ?>"><?= View::avatar($t, 40) ?></a><?php endforeach; ?>
         <?php if ($others > 0): ?><span class="more">+<?= $others ?></span><?php endif; ?>
       </span>
-      <span class="stack-text"><b><?= Format::e(implode(', ', array_column($top, 'name'))) ?></b><?= $others > 0 ? ' and ' . $others . ' more ranked' : '' ?></span>
+      <span class="stack-text"><b><?= Format::e(implode(', ', array_column($top, 'name'))) ?></b><?php
+        if ($ranked) {
+            echo $others > 0 ? ' and ' . $others . ' more ranked' : '';
+        } else {
+            echo ($others > 0 ? ' and ' . $others . ' more teams' : '') . ' tracked so far';
+        } ?></span>
     </div>
   <?php endif; ?>
+</section>
+
+<section class="sources" aria-label="Data sources">
+  <span class="sources-label">Live audience data from</span>
+  <a class="source-chip" href="https://www.twitch.tv"><?= View::platform('twitch', true) ?></a>
+  <a class="source-chip" href="https://kick.com"><?= View::platform('kick', true) ?></a>
+  <span class="sources-note">Official streams, sampled every 10 minutes · <a href="methodology.php#avg-viewers">How it works</a></span>
 </section>
 
 <section class="stats" aria-label="Season overview">

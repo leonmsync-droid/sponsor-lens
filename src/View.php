@@ -46,7 +46,7 @@ final class View
   <div class="site-inner">
     <p>
       Match data <a href="https://pandascore.co">PandaScore</a> ·
-      Live viewers from official streams on <a href="https://www.twitch.tv">Twitch</a> and <a href="https://kick.com">Kick</a> ·
+      Live viewers from official streams on <a href="https://www.twitch.tv"><?= self::platform('twitch') ?></a> and <a href="https://kick.com"><?= self::platform('kick') ?></a> ·
       Sponsors <a href="https://liquipedia.net/counterstrike/">Liquipedia</a> (<a href="https://creativecommons.org/licenses/by-sa/3.0/">CC-BY-SA 3.0</a>)
     </p>
     <p>Counter-Strike 2 and its artwork are trademarks of Valve Corporation. Sponsor Lens is not affiliated with or endorsed by Valve.</p>
@@ -74,6 +74,17 @@ final class View
         $name = Format::e(Format::country(strtoupper($cc)));
         return sprintf('<img class="flag" src="assets/flags/%s.svg" alt="%s" title="%s" width="%d" height="%d">',
             $cc, $name, $name, (int) round($height * 4 / 3), $height);
+    }
+
+    // Platform name with its icon, e.g. View::platform('twitch'). Icons: Simple Icons (CC0), public/assets/icons.
+    // Monochrome by default; $colour uses the full-colour version ({name}-color.svg) in the brand's own colours.
+    public static function platform(string $name, bool $colour = false): string
+    {
+        static $labels = ['twitch' => 'Twitch', 'kick' => 'Kick'];
+        $file = APP_ROOT . "/public/assets/icons/$name" . ($colour ? '-color' : '') . '.svg';
+        $svg = is_file($file) ? (string) file_get_contents($file) : '';
+        $svg = preg_replace(['~<title>.*?</title>~', '~^<svg ~'], ['', '<svg class="icon icon-' . $name . '" aria-hidden="true" focusable="false" '], trim($svg));
+        return '<span class="platform">' . $svg . ($labels[$name] ?? Format::e($name)) . '</span>';
     }
 
     // Round team logo (cached by logo.php, or an initials avatar).

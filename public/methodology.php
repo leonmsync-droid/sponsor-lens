@@ -99,7 +99,7 @@ View::header('Methodology and data sources', 'methodology.php');
 <h2>Sources and attribution</h2>
 <ul>
   <li><a href="https://pandascore.co">PandaScore</a>: tournaments, teams, schedules, results and each match's stream list. We publish our own statistics, not PandaScore's raw data.</li>
-  <li><a href="https://dev.twitch.tv/docs/api/">Twitch API</a> and <a href="https://docs.kick.com">Kick API</a>: live viewer counts of official streams.</li>
+  <li><a href="https://dev.twitch.tv/docs/api/"><?= View::platform('twitch') ?> API</a> and <a href="https://docs.kick.com"><?= View::platform('kick') ?> API</a>: live viewer counts of official streams. Twitch and Kick are trademarks of their owners; Sponsor Lens is not affiliated with either.</li>
   <li><a href="https://liquipedia.net/counterstrike/">Liquipedia</a>: team sponsors, entered by hand with a link to the source page. Liquipedia content is licensed under <a href="https://creativecommons.org/licenses/by-sa/3.0/">CC-BY-SA 3.0</a>.</li>
 </ul>
 </div>

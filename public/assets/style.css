@@ -12,9 +12,9 @@
   --text: #f1f3f5;
   --muted: #8f97a1;
   --faint: #626a73;
-  --accent: #53fc18;
-  --accent-soft: rgba(83, 252, 24, 0.16);
-  --accent-dim: rgba(83, 252, 24, 0.38);
+  --accent: #b4ff39;
+  --accent-soft: rgba(180, 255, 57, 0.16);
+  --accent-dim: rgba(180, 255, 57, 0.38);
   --on-accent: #0b0d0f;
   --up: #6ee59a;
   --up-bg: rgba(110, 229, 154, 0.12);
@@ -22,7 +22,7 @@
   --down-bg: rgba(255, 138, 138, 0.12);
   --flat-bg: rgba(143, 151, 161, 0.14);
   --mark: #e8b44c;
-  --live: #53fc18;
+  --live: #b4ff39;
   --logo-bg: #e9ecef;
   --radius: 16px;
   color-scheme: dark;
@@ -39,9 +39,9 @@
     --text: #0f1215;
     --muted: #5d646e;
     --faint: #959ba3;
-    --accent: #2a8f06;
-    --accent-soft: rgba(42, 143, 6, 0.1);
-    --accent-dim: rgba(42, 143, 6, 0.35);
+    --accent: #5a8a00;
+    --accent-soft: rgba(90, 138, 0, 0.1);
+    --accent-dim: rgba(90, 138, 0, 0.35);
     --on-accent: #0b0d0f;
     --up: #1d7a3f;
     --up-bg: #e5f4ea;
@@ -49,7 +49,7 @@
     --down-bg: #fcebea;
     --flat-bg: #eef0f2;
     --mark: #b7791f;
-    --live: #1f9a0b;
+    --live: #4f7d00;
     color-scheme: light;
   }
 }
@@ -120,6 +120,21 @@ footer.site a:hover { color: var(--accent); }
 
 /* SVG flags: small rounded rectangles with a hairline edge so white flags don't vanish. */
 img.flag { display: inline-block; flex: none; border-radius: 3px; box-shadow: 0 0 0 1px var(--line-strong); vertical-align: middle; object-fit: cover; }
+
+/* Platform icons (Simple Icons, CC0), monochrome so they label a source rather than brand the page. */
+.platform { display: inline-flex; align-items: baseline; gap: 0.28em; white-space: nowrap; }
+svg.icon { width: 0.85em; height: 0.85em; fill: currentColor; align-self: center; flex: none; }
+
+/* Data sources strip under the rankings hero */
+.sources { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 12px; margin: 0 0 20px; padding: 14px 22px; background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); }
+.sources-label { font-size: 0.85rem; font-weight: 600; color: var(--muted); margin-right: 4px; }
+.source-chip { display: inline-flex; align-items: center; padding: 7px 14px; border-radius: 999px; background: var(--raised); border: 1px solid var(--line-strong); font-weight: 700; font-size: 1rem; color: var(--text); }
+.source-chip:hover { border-color: var(--accent); color: var(--text); }
+.source-chip svg.icon { width: 1.15em; height: 1.15em; }
+.source-chip .platform { gap: 0.45em; align-items: center; }
+.sources-note { font-size: 0.82rem; color: var(--faint); margin-left: auto; }
+.sources-note a { color: var(--muted); }
+.sources-note a:hover { color: var(--accent); }
 
 .avatar { border-radius: 50%; background: var(--logo-bg); padding: 3px; object-fit: contain; flex: none; vertical-align: middle; }
 
@@ -348,6 +363,9 @@ dl.formulas dd p { margin: 8px 0; }
   }
   .verdict { font-size: 1.02rem; }
   .lede { font-size: 1rem; margin-bottom: 18px; }
+  .sources { padding: 14px 16px; }
+  .sources-label { flex-basis: 100%; }
+  .sources-note { margin-left: 0; flex-basis: 100%; }
   .verdict.now { font-size: 0.95rem; }
   .stack { margin-top: 20px; }
   .avatars .avatar { width: 34px; height: 34px; }
