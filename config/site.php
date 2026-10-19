@@ -2,7 +2,7 @@
 // Public (non-secret) site settings.
 
 return [
-    // Teams based in these countries (PandaScore team `location`) get a flag and a rankings filter.
+    // Teams based in these countries (PandaScore team `location`) are highlighted in the rankings.
     // This only highlights teams; audience figures are always global.
     'highlight_countries' => ['GB', 'DK'],
     'highlight_label'     => 'UK and Denmark',

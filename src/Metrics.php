@@ -151,15 +151,13 @@ final class Metrics
         ];
     }
 
-    // Rankings: optional tier and highlighted-countries filters. Teams with enough audience data first
+    // Rankings: optional tier filter. Teams with enough audience data first
     // (by avg viewers), then the rest by matches tracked, then win rate.
-    public function rankings(?string $tier, bool $highlightOnly, int $activeDays = 120): array
+    public function rankings(?string $tier, int $activeDays = 120): array
     {
         $since = gmdate('Y-m-d H:i:s', time() - $activeDays * 86400);
-        $highlight = config('site.highlight_countries');
         $rows = array_filter($this->teamTable(), fn($t) =>
             ($tier === null || $t['tier'] === $tier)
-            && (!$highlightOnly || in_array($t['location'], $highlight, true))
             && ($t['last_played'] >= $since || $t['tracked'] > 0));
 
         usort($rows, fn($a, $b) =>

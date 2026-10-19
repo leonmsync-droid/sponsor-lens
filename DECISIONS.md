@@ -52,3 +52,15 @@ About 1,080 teams played this season. The table lists teams that played in the l
 
 ## 2026-10-19 — Sponsors skipped for the afternoon cut
 `data/sponsors.json` has the structure and an example; team pages show "No sponsors recorded yet" until entries are added by hand from Liquipedia.
+
+## 2026-10-19 — Visual redesign: dark-first, Kick-inspired, own accent
+Inspired by Kick's homepage (owner's reference): dark surfaces, heavy headings with one accent word, pill tags, round avatars, a green live dot and compact numbers ("1.2K"). Deliberately not Kick's neon green: Kick is a data source, so looking like it could imply affiliation, and green already means "above tier average". Accent is electric cyan; green/red are reserved for above/below. Light theme kept via `prefers-color-scheme`.
+
+## 2026-10-19 — Team logos cached on our server
+`public/logo.php` downloads PandaScore's small thumbnail once per team into `storage/logos/` and serves it from our domain, so the strict CSP (`img-src 'self'`) stays and pages never hotlink. Only the URL stored for that team id (PandaScore CDN host) is fetched. Teams without a logo get an initials avatar (SVG).
+
+## 2026-10-19 — No inline styles or scripts
+Bars are SVG attributes, filters are plain links, chart data is a JSON block. This keeps the CSP free of `unsafe-inline`.
+
+## 2026-10-19 — CS2 key art in the rankings hero
+Owner-supplied Counter-Strike 2 artwork (Valve's), shown at its native size on the right of the rankings hero and faded into the panel (stacked above the text on phones). It's Valve's trademark and artwork, used non-commercially; the footer states Sponsor Lens is not affiliated with or endorsed by Valve. Converted to JPEG (36 KB).

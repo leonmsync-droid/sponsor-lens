@@ -9,14 +9,18 @@ $tiers = implode(', ', array_map([Verdict::class, 'tierLabel'], array_merge(...a
 
 View::header('Methodology and data sources', 'methodology.php');
 ?>
-<h1>Methodology and data sources</h1>
-<p class="verdict">Every figure on this site comes from official match streams and match results, using the formulas below. Treat them as signals, not predictions.</p>
+<section class="hero">
+  <p class="eyebrow">Methodology</p>
+  <h1>How the <span class="accent">numbers</span> are made</h1>
+  <p class="verdict">Every figure on this site comes from official match streams and match results, using the formulas below. Treat them as signals, not predictions.</p>
+</section>
+<div class="prose">
 
 <h2>What's covered</h2>
 <ul>
   <li>Counter-Strike 2, PandaScore tournament tiers: <?= $tiers ?>. Tier S and A events are excluded.</li>
   <li>"This season" means matches since <?= Format::e(gmdate('j F Y', strtotime(season_start()))) ?>.</li>
-  <li>Teams from <?= Format::e(config('site.highlight_label')) ?> are flagged and can be filtered. Audience figures are global for every team.</li>
+  <li>Teams from <?= Format::e(config('site.highlight_label')) ?> are highlighted in the rankings. Audience figures are global for every team.</li>
 </ul>
 
 <h2>Formulas</h2>
@@ -86,4 +90,5 @@ View::header('Methodology and data sources', 'methodology.php');
   <li><a href="https://dev.twitch.tv/docs/api/">Twitch API</a> and <a href="https://docs.kick.com">Kick API</a>: live viewer counts of official streams.</li>
   <li><a href="https://liquipedia.net/counterstrike/">Liquipedia</a>: team sponsors, entered by hand with a link to the source page. Liquipedia content is licensed under <a href="https://creativecommons.org/licenses/by-sa/3.0/">CC-BY-SA 3.0</a>.</li>
 </ul>
+</div>
 <?php View::footer();
