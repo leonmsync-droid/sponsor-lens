@@ -67,3 +67,6 @@ Owner-supplied Counter-Strike 2 artwork (Valve's), shown at its native size on t
 
 ## 2026-10-19 — Match load prototype (esports × health angle)
 Team pages get a "Match load" section built only from schedule data we already sync, so it works for every team without audience data. Load is counted in maps (map-score sum), not just matches. Short rest = under 24h since the previous match start; rested = 48h+. "Form under load" (win rate short-rest vs rested) shows only with 5+ matches in each group. Framed as a workload signal: it ignores opponent strength, travel, LAN vs online and roster changes, and makes no medical claims. Thresholds are constants in `Metrics` so they can be tuned.
+
+## 2026-10-19 — SVG flags instead of emoji
+Emoji flags render differently per platform (Windows shows letters like "GB" instead of a flag). Switched to flag-icons 7.5.0 (MIT), all 271 4:3 SVGs self-hosted in `public/assets/flags` (licence alongside) so the CSP stays `img-src 'self'`. Files were scanned for scripts/external refs before adding. Shown as small rounded rectangles with a hairline edge; unknown codes show no flag.

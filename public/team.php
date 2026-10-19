@@ -53,7 +53,7 @@ View::header($team['name']);
     <div>
       <h1><?= Format::e($team['name']) ?></h1>
       <p class="meta">
-        <?php if ($team['location']): ?><span class="flag"><?= Format::flag($team['location']) ?></span><?php endif; ?>
+        <?= View::flag($team['location'], 16) ?>
         <?= Format::e(Format::country($team['location'])) ?> · <?= Verdict::tierLabel($team['tier']) ?>
       </p>
     </div>

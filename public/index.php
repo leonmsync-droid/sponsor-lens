@@ -94,7 +94,7 @@ View::header('Team rankings', 'index.php');
           <span class="name"><?= Format::e($r['name']) ?></span>
         </a>
         <span class="meta">
-          <?php if ($r['location']): ?><span class="flag" title="<?= Format::e(Format::country($r['location'])) ?>"><?= Format::flag($r['location']) ?></span><?php endif; ?>
+          <?= View::flag($r['location']) ?>
           <?= View::tierTag($r['tier']) ?>
         </span>
       </td>

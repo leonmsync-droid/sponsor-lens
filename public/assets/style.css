@@ -117,6 +117,9 @@ footer.site a:hover { color: var(--accent); }
 .delta.down { background: var(--down-bg); color: var(--down); }
 .tier-tag { font-size: 0.75rem; font-weight: 600; color: var(--faint); white-space: nowrap; }
 
+/* SVG flags: small rounded rectangles with a hairline edge so white flags don't vanish. */
+img.flag { display: inline-block; flex: none; border-radius: 3px; box-shadow: 0 0 0 1px var(--line-strong); vertical-align: middle; object-fit: cover; }
+
 .avatar { border-radius: 50%; background: var(--logo-bg); padding: 3px; object-fit: contain; flex: none; vertical-align: middle; }
 
 .button {
@@ -165,7 +168,7 @@ svg.bar.progress .fill { fill: var(--mark); }
 .team-head .avatar { padding: 8px; }
 .team-head h1 { margin: 0 0 4px; }
 .team-head .meta { margin: 0; color: var(--muted); font-weight: 600; }
-.team-head .meta .flag { margin-right: 4px; }
+.team-head .meta { display: flex; align-items: center; gap: 8px; }
 
 /* Rankings overview */
 .stats { display: grid; grid-template-columns: 1fr 1fr 2fr; gap: 12px; margin-bottom: 32px; }

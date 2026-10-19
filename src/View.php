@@ -63,6 +63,18 @@ final class View
         return '<a class="formula" href="methodology.php#' . Format::e($anchor) . '">' . Format::e($label) . '</a>';
     }
 
+    // Country flag from public/assets/flags (flag-icons, MIT), 4:3. Empty when the code or file is unknown.
+    public static function flag(?string $cc, int $height = 14): string
+    {
+        $cc = strtolower((string) $cc);
+        if (!preg_match('/^[a-z]{2}$/', $cc) || !is_file(APP_ROOT . "/public/assets/flags/$cc.svg")) {
+            return '';
+        }
+        $name = Format::e(Format::country(strtoupper($cc)));
+        return sprintf('<img class="flag" src="assets/flags/%s.svg" alt="%s" title="%s" width="%d" height="%d">',
+            $cc, $name, $name, (int) round($height * 4 / 3), $height);
+    }
+
     // Round team logo (cached by logo.php, or an initials avatar).
     public static function avatar(array $team, int $size = 32): string
     {

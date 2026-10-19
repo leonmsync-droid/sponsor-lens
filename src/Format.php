@@ -58,15 +58,6 @@ final class Format
         return '€' . number_format($n, $n < 100 ? 2 : 0);
     }
 
-    // Emoji flag from an ISO country code (GB -> 🇬🇧). Empty when unknown.
-    public static function flag(?string $cc): string
-    {
-        if (!$cc || !preg_match('/^[A-Z]{2}$/', $cc)) {
-            return '';
-        }
-        return mb_chr(0x1F1E6 + ord($cc[0]) - 65) . mb_chr(0x1F1E6 + ord($cc[1]) - 65);
-    }
-
     public static function date(?string $ts): string
     {
         return $ts ? gmdate('j M', strtotime($ts)) : '–';
