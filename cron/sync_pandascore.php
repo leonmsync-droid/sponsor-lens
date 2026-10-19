@@ -74,6 +74,7 @@ foreach (config('games') as $gameKey => $game) {
 }
 
 $db->setKv('last_pandascore_sync', $now);
+Metrics::clearCache();
 logline("PandaScore requests: {$ps->requests}" . ($ps->remaining !== null ? ", remaining this hour: {$ps->remaining}" : ''));
 
 function upsertTeam(Db $db, array $team, string $game, string $now): void

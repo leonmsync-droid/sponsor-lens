@@ -15,6 +15,12 @@ final class Metrics
 
     public function __construct(private Db $db) {}
 
+    // Call after any job that changes matches or summaries, so pages don't serve a stale table.
+    public static function clearCache(): void
+    {
+        @unlink(STORAGE_DIR . '/cache/team_table.json');
+    }
+
     public static function minTracked(): int
     {
         return (int) config('site.min_tracked_matches');

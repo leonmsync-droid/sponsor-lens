@@ -39,6 +39,9 @@ foreach ($matchIds as $matchId) {
     ], ['match_id']);
 }
 logline(count($matchIds) . ' match summaries built');
+if ($matchIds) {
+    Metrics::clearCache();
+}
 
 $deleted = $db->run('DELETE FROM stream_samples WHERE sampled_at < ?', [gmdate('Y-m-d H:i:s', time() - 86400)])->rowCount();
 logline("$deleted raw samples older than 24h deleted");

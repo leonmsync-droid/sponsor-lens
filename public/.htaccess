@@ -11,6 +11,15 @@ Header always set Content-Security-Policy "default-src 'self'; script-src 'self'
 Options -Indexes
 DirectoryIndex index.php
 
+# Anything that isn't a real file or folder is a 404 (the host otherwise falls back to index.php with a 200).
+ErrorDocument 404 "Not found"
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  RewriteCond %{REQUEST_FILENAME} !-f
+  RewriteCond %{REQUEST_FILENAME} !-d
+  RewriteRule ^ - [R=404,L]
+</IfModule>
+
 # Block dotfiles (except .well-known for SSL validation) and stray backup/log files.
 RedirectMatch 404 /\.(?!well-known/)
 <FilesMatch "\.(bak|sql|md|log|json)$">
