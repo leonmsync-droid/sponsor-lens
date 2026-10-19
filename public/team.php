@@ -157,11 +157,9 @@ View::header($team['name']);
 </section>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
-<script>
-window.teamData = <?= json_encode([
+<script type="application/json" id="team-data"><?= json_encode([
     'viewers'  => $enough ? $detail['viewers'] : [],
     'winRate'  => $detail['rolling_win_rate'],
-], JSON_HEX_TAG | JSON_HEX_AMP) ?>;
-</script>
+], JSON_HEX_TAG | JSON_HEX_AMP) ?></script>
 <script src="assets/team.js"></script>
 <?php View::footer();

@@ -22,7 +22,7 @@ View::header('Team rankings', 'index.php');
 
 <form class="filters" method="get">
   <label>Tier
-    <select name="tier" onchange="this.form.submit()">
+    <select name="tier">
       <option value="">All tracked tiers</option>
       <?php foreach ($tracked as $t): ?>
         <option value="<?= $t ?>"<?= $tier === $t ? ' selected' : '' ?>><?= Verdict::tierLabel($t) ?></option>
@@ -30,11 +30,12 @@ View::header('Team rankings', 'index.php');
     </select>
   </label>
   <label class="toggle">
-    <input type="checkbox" name="hl" value="1"<?= $highlightOnly ? ' checked' : '' ?> onchange="this.form.submit()">
+    <input type="checkbox" name="hl" value="1"<?= $highlightOnly ? ' checked' : '' ?>>
     <?= Format::e(config('site.highlight_label')) ?> only
   </label>
   <noscript><button type="submit">Apply</button></noscript>
 </form>
+<script src="assets/filters.js"></script>
 
 <?php if (!$rows): ?>
   <p class="empty">No teams match these filters.</p>

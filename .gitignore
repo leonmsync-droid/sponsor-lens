@@ -6,3 +6,6 @@ config.php
 storage/
 *.log
 .DS_Store
+
+# Written by AutoSSL on the server
+public/.well-known/

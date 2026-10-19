@@ -19,7 +19,9 @@
     form.addEventListener('submit', function (e) { e.preventDefault(); update(); });
   }
 
-  if (!window.Chart || !window.teamData) return;
+  var dataEl = document.getElementById('team-data');
+  if (!window.Chart || !dataEl) return;
+  var teamData = JSON.parse(dataEl.textContent);
 
   var css = getComputedStyle(document.documentElement);
   var color = function (name) { return css.getPropertyValue(name).trim(); };
