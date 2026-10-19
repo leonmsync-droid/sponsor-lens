@@ -47,4 +47,28 @@ final class Verdict
         }
         return $sentence . sprintf('. %d %s enough data to rank.', count($leaders), count($leaders) === 1 ? 'team has' : 'teams have');
     }
+
+    // Match load: busiest stretch, then form on short rest vs rested when both samples are big enough.
+    public static function load(array $l): string
+    {
+        if (!$l['matches']) {
+            return 'No completed matches this season yet.';
+        }
+        $b = $l['busiest'];
+        $span = gmdate('j M', $b['to']);
+        if (gmdate('Y-m-d', $b['from']) !== gmdate('Y-m-d', $b['to'])) {
+            $span = (gmdate('M', $b['from']) === gmdate('M', $b['to']) ? gmdate('j', $b['from']) : gmdate('j M', $b['from'])) . '–' . $span;
+        }
+        $sentence = sprintf('Busiest stretch: %d matches (%d maps) in 7 days, %s.', $b['matches'], $b['maps'], $span);
+
+        $short = $l['short']['rate'];
+        $rested = $l['rested']['rate'];
+        if ($short !== null && $rested !== null) {
+            $gap = $short - $rested;
+            $sentence .= abs($gap) < 0.10
+                ? sprintf(' Form held up on short rest (%s won vs %s when rested).', Format::pct($short), Format::pct($rested))
+                : sprintf(' Won %s of matches on short rest vs %s when rested.', Format::pct($short), Format::pct($rested));
+        }
+        return $sentence;
+    }
 }

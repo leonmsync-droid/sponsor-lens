@@ -72,6 +72,18 @@ View::header('Methodology and data sources', 'methodology.php');
     <p class="example">Example: €5,000 ÷ (19,872 ÷ 1,000) ≈ €252 per 1,000 match views.</p>
     <p>An estimate for comparing teams, not a price. It ignores social media, VOD views and anything outside tracked matches.</p>
   </dd>
+
+  <dt id="match-load">Match load (prototype)</dt>
+  <dd>
+    <p>How demanding a team's schedule has been this season, from completed matches (forfeits excluded).</p>
+    <p class="formula-line">maps = sum of the map score (a 2–1 best-of-3 = 3 maps)</p>
+    <p class="formula-line">busiest stretch = most matches started within any 7-day window</p>
+    <p class="formula-line">typical rest = median days between match days</p>
+    <p class="formula-line">short rest = match starts under <?= Metrics::SHORT_REST_HOURS ?>h after the previous one · rested = <?= Metrics::RESTED_HOURS ?>h or more</p>
+    <p>"Form under load" compares win rate on short rest with win rate when rested, once each has <?= Metrics::MIN_FORM_SAMPLE ?>+ matches.</p>
+    <p class="example">Example: 9 short-rest matches with 4 wins (44%) vs 12 rested matches with 8 wins (67%).</p>
+    <p>These are workload signals from the schedule, not a medical or performance assessment. They don't account for opponent strength, travel, online vs LAN, or roster changes.</p>
+  </dd>
 </dl>
 
 <h2>Data limits</h2>

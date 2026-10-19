@@ -64,3 +64,6 @@ Bars are SVG attributes, filters are plain links, chart data is a JSON block. Th
 
 ## 2026-10-19 — CS2 key art in the rankings hero
 Owner-supplied Counter-Strike 2 artwork (Valve's), shown at its native size on the right of the rankings hero and faded into the panel (stacked above the text on phones). It's Valve's trademark and artwork, used non-commercially; the footer states Sponsor Lens is not affiliated with or endorsed by Valve. Converted to JPEG (36 KB).
+
+## 2026-10-19 — Match load prototype (esports × health angle)
+Team pages get a "Match load" section built only from schedule data we already sync, so it works for every team without audience data. Load is counted in maps (map-score sum), not just matches. Short rest = under 24h since the previous match start; rested = 48h+. "Form under load" (win rate short-rest vs rested) shows only with 5+ matches in each group. Framed as a workload signal: it ignores opponent strength, travel, LAN vs online and roster changes, and makes no medical claims. Thresholds are constants in `Metrics` so they can be tuned.

@@ -16,7 +16,7 @@ final class View
 <title><?= Format::e($title) ?> · Sponsor Lens</title>
 <meta name="description" content="Which tier-2 and tier-3 Counter-Strike 2 teams draw the most viewers, and what a sponsorship costs per 1,000 match views.">
 <meta name="color-scheme" content="dark light">
-<link rel="icon" href="assets/mark.svg" type="image/svg+xml">
+<link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
 <link rel="stylesheet" href="assets/style.css">
 </head>
 <body>

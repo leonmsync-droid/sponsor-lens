@@ -250,6 +250,28 @@ table.rankings { width: 100%; border-collapse: separate; border-spacing: 0; font
 .chart-empty { display: flex; flex-direction: column; justify-content: center; align-items: center; min-height: 220px; margin: 0; padding: 24px; text-align: center; color: var(--faint); background: var(--bg); border: 1px dashed var(--line-strong); border-radius: 12px; }
 .chart-empty svg.bar { max-width: 200px; margin: 4px auto 8px; }
 
+/* Match load */
+.load { margin-top: 20px; padding: 24px; }
+.load-head { display: flex; justify-content: space-between; align-items: flex-start; gap: 16px; }
+.load-head h2 { font-size: 1.3rem; font-weight: 800; letter-spacing: -0.02em; }
+.load-head .caption { margin: 2px 0 0; font-size: 0.85rem; }
+.load-head .formula { margin: 0 0 0 6px; }
+.tag.ghost { background: transparent; color: var(--mark); border: 1px solid var(--mark); }
+.load-verdict { font-size: 1.05rem; font-weight: 600; margin: 16px 0 20px; max-width: 70ch; }
+.load-stats { display: grid; grid-template-columns: repeat(4, 1fr); border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+.load-stats > div { display: flex; flex-direction: column; padding: 16px 20px; border-left: 1px solid var(--line); }
+.load-stats > div:first-child { border-left: 0; padding-left: 0; }
+.load-stats .label { font-size: 0.8rem; font-weight: 600; color: var(--muted); }
+.load-stats .value { font-size: 1.8rem; font-weight: 800; letter-spacing: -0.03em; line-height: 1.2; font-variant-numeric: tabular-nums; }
+.load-body { display: grid; grid-template-columns: 3fr 2fr; gap: 32px; margin-top: 20px; }
+.load-chart .canvas { position: relative; height: 200px; }
+.load-chart .caption, .load-form .caption { font-size: 0.82rem; margin: 0 0 12px; }
+.form-row { margin-bottom: 18px; }
+.form-label { display: flex; justify-content: space-between; align-items: baseline; font-size: 0.88rem; font-weight: 600; margin-bottom: 6px; }
+.form-label b { font-size: 1.3rem; font-weight: 800; font-variant-numeric: tabular-nums; }
+svg.bar.warn .fill { fill: var(--mark); }
+.load-form .note { color: var(--faint); margin-top: 4px; }
+
 .lists { display: grid; grid-template-columns: 1.3fr 1fr 1fr; gap: 12px; margin-top: 20px; align-items: start; }
 .lists .panel { padding: 22px; }
 .lists h2 { padding-bottom: 10px; border-bottom: 1px solid var(--line); margin-bottom: 0; }
@@ -297,6 +319,7 @@ dl.formulas dd p { margin: 8px 0; }
   .lists { grid-template-columns: 1fr 1fr; }
   .lists .panel:first-child { grid-column: 1 / -1; }
   .fee { grid-template-columns: 1fr; }
+  .load-body { grid-template-columns: 1fr; }
   .fee-out, .fee-pending { grid-column: 1; grid-row: auto; border-left: 0; padding-left: 0; border-top: 1px solid var(--line); padding-top: 20px; }
 }
 
@@ -325,6 +348,11 @@ dl.formulas dd p { margin: 8px 0; }
   .card { padding: 16px 18px; }
   .card .figure { font-size: 1.8rem; }
   .fee { padding: 22px; }
+  .load { padding: 20px; }
+  .load-stats { grid-template-columns: 1fr 1fr; }
+  .load-stats > div:nth-child(3) { border-left: 0; padding-left: 0; }
+  .load-stats > div:nth-child(n+3) { border-top: 1px solid var(--line); }
+  .load-stats > div { padding: 12px 14px; }
   .fee-result { font-size: 2.1rem; }
   .segmented { display: flex; width: 100%; }
   .segmented a { flex: 1; text-align: center; padding: 6px 4px; }

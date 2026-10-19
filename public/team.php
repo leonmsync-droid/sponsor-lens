@@ -16,6 +16,7 @@ if (!$team) {
 }
 
 $detail = $metrics->teamDetail($id);
+$load = $metrics->matchLoad($id);
 $sponsors = json_decode((string) @file_get_contents(APP_ROOT . '/data/sponsors.json'), true)['teams'][(string) $id] ?? [];
 $enough = $team['enough_data'];
 $fee = isset($_GET['fee']) && is_numeric($_GET['fee']) && $_GET['fee'] > 0 ? (float) $_GET['fee'] : null;
@@ -147,6 +148,42 @@ View::header($team['name']);
   </div>
 </section>
 
+<section class="panel load" aria-labelledby="load-h">
+  <div class="load-head">
+    <div>
+      <h2 id="load-h">Match load</h2>
+      <p class="caption">How hard the schedule has been this season. <?= View::formula('match-load', 'How is this calculated?') ?></p>
+    </div>
+    <span class="tag ghost">Prototype</span>
+  </div>
+  <p class="load-verdict"><?= Format::e(Verdict::load($load)) ?></p>
+  <?php if ($load['matches']): ?>
+  <div class="load-stats">
+    <div><span class="label">Last 28 days</span><span class="value"><?= (int) $load['recent']['matches'] ?></span><span class="sub"><?= (int) $load['recent']['maps'] ?> maps</span></div>
+    <div><span class="label">Busiest 7 days</span><span class="value"><?= (int) $load['busiest']['matches'] ?></span><span class="sub"><?= (int) $load['busiest']['maps'] ?> maps</span></div>
+    <div><span class="label">Typical rest</span><span class="value"><?= $load['median_rest'] !== null ? Format::e(rtrim(rtrim(number_format($load['median_rest'], 1), '0'), '.')) . 'd' : '–' ?></span><span class="sub">between match days</span></div>
+    <div><span class="label">Season</span><span class="value"><?= (int) $load['matches'] ?></span><span class="sub"><?= (int) $load['maps'] ?> maps</span></div>
+  </div>
+  <div class="load-body">
+    <div class="load-chart">
+      <p class="caption">Maps played per week, last 16 weeks.</p>
+      <div class="canvas"><canvas id="load-chart" role="img" aria-label="Bar chart of maps played per week"></canvas></div>
+    </div>
+    <div class="load-form">
+      <p class="caption">Win rate by rest before the match.</p>
+      <?php foreach (['short' => 'Short rest (under ' . Metrics::SHORT_REST_HOURS . 'h)', 'rested' => 'Rested (' . Metrics::RESTED_HOURS . 'h or more)'] as $key => $label): $g = $load[$key]; ?>
+        <div class="form-row">
+          <div class="form-label"><span><?= $label ?></span><b><?= $g['rate'] !== null ? Format::pct($g['rate']) : '–' ?></b></div>
+          <?= View::bar($g['rate'] ?? 0, $key === 'short' ? 'warn' : '') ?>
+          <span class="sub"><?= $g['rate'] !== null ? (int) $g['won'] . ' of ' . (int) $g['played'] . ' won' : 'Needs ' . Metrics::MIN_FORM_SAMPLE . '+ matches (' . (int) $g['played'] . ' so far)' ?></span>
+        </div>
+      <?php endforeach; ?>
+      <p class="note">Doesn't account for opponent strength. A workload signal, not a medical or performance assessment.</p>
+    </div>
+  </div>
+  <?php endif; ?>
+</section>
+
 <section class="lists">
   <div class="panel">
     <h2>Recent results</h2>
@@ -195,6 +232,7 @@ View::header($team['name']);
     'tierAvg'   => $enough && $team['expected'] ? (int) round($team['expected']) : null,
     'tierLabel' => $against . ' average',
     'winRate'   => $detail['rolling_win_rate'],
+    'load'      => $load['weeks'] ?? [],
 ], JSON_HEX_TAG | JSON_HEX_AMP) ?></script>
 <script src="assets/team.js"></script>
 <?php View::footer();

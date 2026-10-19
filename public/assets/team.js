@@ -128,4 +128,27 @@
       }
     });
   }
+  var load = document.getElementById('load-chart');
+  if (load && data.load.length) {
+    new Chart(load, {
+      type: 'bar',
+      data: {
+        labels: data.load.map(function (w) { return shortDate(w.week); }),
+        datasets: [{
+          label: 'Maps',
+          data: data.load.map(function (w) { return w.maps; }),
+          backgroundColor: color('--mark'),
+          borderRadius: 3,
+          maxBarThickness: 18
+        }]
+      },
+      options: {
+        scales: { x: xAxis, y: { beginAtZero: true, ticks: { precision: 0, maxTicksLimit: 4 } } },
+        plugins: { tooltip: { callbacks: {
+          title: function (items) { return 'Week of ' + items[0].label; },
+          label: function (c) { var w = data.load[c.dataIndex]; return ' ' + w.maps + ' maps · ' + w.matches + ' matches · ' + w.won + ' won'; }
+        } } }
+      }
+    });
+  }
 })();

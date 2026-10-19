@@ -233,4 +233,98 @@ final class Metrics
         $views = self::seasonViews($team);
         return $views ? $fee / ($views / 1000) : null;
     }
+
+    // Match load this season, from the schedule (finished, non-forfeit matches):
+    //   maps            = map score sum (a 2–1 best-of-3 is 3 maps)
+    //   short rest      = match starts < SHORT_REST_HOURS after the team's previous match started
+    //   rested          = >= RESTED_HOURS since the previous match
+    //   busiest stretch = most matches in any 7-day window
+    // Signals about workload, not medical or performance claims.
+    public const SHORT_REST_HOURS = 24;
+    public const RESTED_HOURS = 48;
+    public const MIN_FORM_SAMPLE = 5;
+
+    public function matchLoad(int $teamId): array
+    {
+        $rows = $this->db->all("SELECT begin_at, team1_score, team2_score, winner_id FROM matches
+            WHERE status = 'finished' AND forfeit = 0 AND begin_at >= ? AND (team1_id = ? OR team2_id = ?)
+            ORDER BY begin_at", [season_start(), $teamId, $teamId]);
+
+        $matches = array_map(fn($r) => [
+            't'    => strtotime($r['begin_at'] . ' UTC'),
+            'maps' => (int) $r['team1_score'] + (int) $r['team2_score'],
+            'won'  => (int) ($r['winner_id'] == $teamId),
+        ], $rows);
+        $n = count($matches);
+        if ($n === 0) {
+            return ['matches' => 0];
+        }
+
+        // Busiest 7-day window (two pointers over start times).
+        $best = ['matches' => 0, 'maps' => 0, 'from' => null, 'to' => null];
+        $maps = 0;
+        for ($i = 0, $j = 0; $j < $n; $j++) {
+            $maps += $matches[$j]['maps'];
+            while ($matches[$j]['t'] - $matches[$i]['t'] >= 7 * 86400) {
+                $maps -= $matches[$i]['maps'];
+                $i++;
+            }
+            $count = $j - $i + 1;
+            if ([$count, $maps] > [$best['matches'], $best['maps']]) {
+                $best = ['matches' => $count, 'maps' => $maps, 'from' => $matches[$i]['t'], 'to' => $matches[$j]['t']];
+            }
+        }
+
+        // Rest before each match, and form on short rest vs rested.
+        $short = $rested = ['played' => 0, 'won' => 0];
+        for ($k = 1; $k < $n; $k++) {
+            $hours = ($matches[$k]['t'] - $matches[$k - 1]['t']) / 3600;
+            if ($hours < self::SHORT_REST_HOURS) {
+                $short['played']++;
+                $short['won'] += $matches[$k]['won'];
+            } elseif ($hours >= self::RESTED_HOURS) {
+                $rested['played']++;
+                $rested['won'] += $matches[$k]['won'];
+            }
+        }
+
+        // Typical rest between match days (median, in days).
+        $days = array_values(array_unique(array_map(fn($m) => intdiv($m['t'], 86400), $matches)));
+        $gaps = [];
+        for ($k = 1; $k < count($days); $k++) {
+            $gaps[] = $days[$k] - $days[$k - 1];
+        }
+        sort($gaps);
+        $medianRest = $gaps ? ($gaps[intdiv(count($gaps) - 1, 2)] + $gaps[intdiv(count($gaps), 2)]) / 2 : null;
+
+        // Last 28 days, and weekly totals for the last 16 weeks (weeks start Monday, UTC).
+        $since28 = time() - 28 * 86400;
+        $recent = array_filter($matches, fn($m) => $m['t'] >= $since28);
+        $thisMonday = strtotime('monday this week 00:00 UTC');
+        $weeks = [];
+        for ($w = 15; $w >= 0; $w--) {
+            $start = $thisMonday - $w * 7 * 86400;
+            $weeks[$start] = ['week' => gmdate('Y-m-d', $start), 'matches' => 0, 'maps' => 0, 'won' => 0];
+        }
+        foreach ($matches as $m) {
+            $start = $thisMonday + (int) floor(($m['t'] - $thisMonday) / (7 * 86400)) * 7 * 86400;
+            if (isset($weeks[$start])) {
+                $weeks[$start]['matches']++;
+                $weeks[$start]['maps'] += $m['maps'];
+                $weeks[$start]['won'] += $m['won'];
+            }
+        }
+
+        $rate = fn(array $g) => $g['played'] >= self::MIN_FORM_SAMPLE ? $g['won'] / $g['played'] : null;
+        return [
+            'matches'     => $n,
+            'maps'        => array_sum(array_column($matches, 'maps')),
+            'recent'      => ['matches' => count($recent), 'maps' => array_sum(array_column($recent, 'maps'))],
+            'busiest'     => $best,
+            'median_rest' => $medianRest,
+            'short'       => $short + ['rate' => $rate($short)],
+            'rested'      => $rested + ['rate' => $rate($rested)],
+            'weeks'       => array_values($weeks),
+        ];
+    }
 }
