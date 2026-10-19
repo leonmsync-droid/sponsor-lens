@@ -89,7 +89,8 @@ h2 { font-size: 1rem; font-weight: 700; letter-spacing: -0.01em; margin: 0 0 4px
 /* Header / footer */
 header.site { border-bottom: 1px solid var(--line); background: color-mix(in srgb, var(--bg) 90%, transparent); backdrop-filter: blur(10px); position: sticky; top: 0; z-index: 10; }
 header.site .site-inner { display: flex; align-items: center; justify-content: space-between; gap: 16px; height: 64px; }
-.brand { color: var(--text); font-size: 1.1rem; font-weight: 600; letter-spacing: -0.02em; }
+.brand { display: flex; flex-direction: column; line-height: 1.15; color: var(--text); font-size: 1.1rem; font-weight: 600; letter-spacing: -0.02em; }
+.brand-tag { font-size: 0.72rem; font-weight: 500; letter-spacing: 0; color: var(--muted); margin-top: 2px; white-space: nowrap; }
 .brand:hover { color: var(--text); }
 .brand b { color: var(--accent); font-weight: 800; }
 header.site nav { display: flex; gap: 6px; }
@@ -154,6 +155,10 @@ svg.bar.progress .fill { fill: var(--mark); }
   mask-image: linear-gradient(to right, transparent 0%, #000 45%);
   pointer-events: none;
 }
+
+.lede { font-size: 1.15rem; line-height: 1.55; max-width: 58ch; margin: 0 0 22px; color: var(--muted); }
+.verdict.now { font-size: 1rem; font-weight: 600; opacity: 1; padding-left: 14px; border-left: 2px solid var(--accent); }
+.now-label { display: block; font-size: 0.72rem; font-weight: 700; color: var(--accent); margin-bottom: 2px; }
 
 .stack { display: flex; align-items: center; gap: 14px; margin-top: 28px; }
 .avatars { display: inline-flex; align-items: center; }
@@ -330,7 +335,9 @@ dl.formulas dd p { margin: 8px 0; }
 @media (max-width: 640px) {
   .site-inner, main { padding: 0 16px; }
   main { padding-top: 20px; }
-  header.site nav a { padding: 6px 10px; font-size: 0.88rem; }
+  header.site nav { gap: 2px; }
+  header.site nav a { padding: 6px 8px; font-size: 0.85rem; }
+  .brand-tag { font-size: 0.68rem; }
   .hero { padding: 22px 20px; }
   .hero.has-art { padding-top: 168px; }
   .hero.has-art > :not(.hero-art) { max-width: none; }
@@ -340,6 +347,8 @@ dl.formulas dd p { margin: 8px 0; }
     mask-image: linear-gradient(to bottom, #000 45%, transparent 100%);
   }
   .verdict { font-size: 1.02rem; }
+  .lede { font-size: 1rem; margin-bottom: 18px; }
+  .verdict.now { font-size: 0.95rem; }
   .stack { margin-top: 20px; }
   .avatars .avatar { width: 34px; height: 34px; }
   .avatars .more { height: 34px; }

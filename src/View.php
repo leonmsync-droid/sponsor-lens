@@ -24,6 +24,7 @@ final class View
   <div class="site-inner">
     <a class="brand" href="index.php" aria-label="Sponsor Lens home">
       <span>Sponsor<b>Lens</b></span>
+      <small class="brand-tag">Tier-2 CS2 sponsor data</small>
     </a>
     <nav aria-label="Main">
       <?php foreach ($nav as $href => $label): ?>

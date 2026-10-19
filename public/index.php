@@ -26,7 +26,8 @@ View::header('Team rankings', 'index.php');
   <img class="hero-art" src="assets/hero-cs2.jpg" alt="" width="369" height="492">
   <p class="eyebrow"><span class="tag">CS2 · This season</span> <?= $tier ? Verdict::tierLabel($tier) : 'Tiers ' . strtoupper(implode(', ', $tracked)) ?></p>
   <h1><span class="accent">Most watched</span> tier-2 and tier-3 CS2 teams</h1>
-  <p class="verdict"><?= Format::e(Verdict::rankings($rows, $tier)) ?></p>
+  <p class="lede">Live audience rankings from official Twitch and Kick streams, for sponsors and the teams they back.</p>
+  <p class="verdict now"><span class="now-label">Right now</span><?= Format::e(Verdict::rankings($rows, $tier)) ?></p>
   <?php if ($ranked): $top = array_slice($ranked, 0, 3); $others = count($ranked) - count($top); ?>
     <div class="stack">
       <span class="avatars">
