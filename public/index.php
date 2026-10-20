@@ -14,7 +14,6 @@ $shown = $showAll ? $rows : array_slice($rows, 0, $limit);
 $ranked = array_values(array_filter($rows, fn($r) => $r['enough_data']));
 $maxAvg = $ranked ? max(array_column($ranked, 'avg_viewers')) : 0;
 $tierAvg = $metrics->tierAverages();
-$highlight = config('site.highlight_countries');
 $rank = 0;
 
 // Filter links keep the current tier.
@@ -102,8 +101,8 @@ View::header('Team rankings', 'index.php');
     </tr>
   </thead>
   <tbody>
-  <?php foreach ($shown as $r): $isHl = in_array($r['location'], $highlight, true); ?>
-    <tr<?= $isHl ? ' class="highlight"' : '' ?>>
+  <?php foreach ($shown as $r): ?>
+    <tr>
       <td class="rank"><?= $r['enough_data'] ? ++$rank : '–' ?></td>
       <td class="team">
         <a href="team.php?id=<?= (int) $r['id'] ?>">

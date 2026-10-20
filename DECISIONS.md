@@ -76,3 +76,6 @@ The accent was `#53fc18`, effectively Kick's brand green (`#53FC19`). With Kick 
 
 ## 2026-10-20 — Source strip logos in brand colours
 In the data-sources strip the logos use each brand's own colours: Twitch purple with the white bubble interior (as in the official Glitch logo; Simple Icons draws it as a cut-out), Kick green. Stored as `twitch-color.svg` / `kick-color.svg`. Footer and Methodology keep the small monochrome icons.
+
+## 2026-10-20 — Country-neutral
+The owner asked for the site to stay neutral rather than focus on particular countries. The UK/Denmark row highlight and its config are removed (the filter was removed earlier); every team is presented the same way. This supersedes the prompt's "UK and Spain" highlight and the later UK/Denmark entries above. Country flags stay as plain information.

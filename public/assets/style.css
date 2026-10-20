@@ -218,8 +218,6 @@ table.rankings { width: 100%; border-collapse: separate; border-spacing: 0; font
 .rankings .num { text-align: right; white-space: nowrap; }
 .rankings .rank { width: 48px; color: var(--faint); font-weight: 700; text-align: center; }
 .rankings tbody tr:hover td { background: var(--raised); }
-.rankings tr.highlight .rank { color: var(--mark); }
-.rankings tr.highlight td.team .name::after { content: ""; display: inline-block; width: 6px; height: 6px; border-radius: 50%; background: var(--mark); margin-left: 8px; vertical-align: middle; }
 .rankings td.team a { display: inline-flex; align-items: center; gap: 12px; font-weight: 700; vertical-align: middle; }
 .rankings td.team .meta { display: inline-flex; align-items: center; gap: 8px; margin-left: 10px; vertical-align: middle; }
 .rankings th.viewers, .rankings td.viewers { width: 30%; }

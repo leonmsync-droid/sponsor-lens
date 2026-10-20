@@ -20,7 +20,7 @@ View::header('Methodology and data sources', 'methodology.php');
 <ul>
   <li>Counter-Strike 2, PandaScore tournament tiers: <?= $tiers ?>. Tier S and A events are excluded.</li>
   <li>"This season" means matches since <?= Format::e(gmdate('j F Y', strtotime(season_start()))) ?>.</li>
-  <li>Teams from <?= Format::e(config('site.highlight_label')) ?> are highlighted in the rankings. Audience figures are global for every team.</li>
+  <li>All teams are treated the same, whatever their country. Audience figures are global for every team.</li>
 </ul>
 
 <h2>Formulas</h2>

@@ -1,12 +1,12 @@
 # Sponsor Lens
 
-A free, non-commercial site that shows sponsors which **tier-2 and tier-3 Counter-Strike 2 teams** draw the most viewers, and roughly what a sponsorship fee costs per 1,000 match views. UK and Danish teams are flagged and filterable; audience figures are global.
+A free, non-commercial site that shows sponsors which **tier-2 and tier-3 Counter-Strike 2 teams** draw the most viewers, and roughly what a sponsorship fee costs per 1,000 match views. Audience figures are global, and every team is treated the same whatever its country.
 
 No ads, accounts or downloads. Built as a portfolio piece; see [`DECISIONS.md`](DECISIONS.md) for the reasoning behind each choice.
 
 ## Pages
 
-- **Team rankings** (`public/index.php`): verdict, tier and UK/Denmark filters, ranked table.
+- **Team rankings** (`public/index.php`): verdict, tier filter, ranked table.
 - **Team page** (`public/team.php?id=…`): verdict, live badge, four metric cards, fee check, viewers and win-rate charts, recent/upcoming matches, sponsors.
 - **Methodology** (`public/methodology.php`): every formula, data limit and source.
 

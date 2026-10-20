@@ -2,11 +2,6 @@
 // Public (non-secret) site settings.
 
 return [
-    // Teams based in these countries (PandaScore team `location`) are highlighted in the rankings.
-    // This only highlights teams; audience figures are always global.
-    'highlight_countries' => ['GB', 'DK'],
-    'highlight_label'     => 'UK and Denmark',
-
     // Rows below this many tracked matches show "Not enough data" for audience metrics.
     'min_tracked_matches' => 3,
 
