@@ -102,7 +102,7 @@ View::header('Team rankings', 'index.php');
   </thead>
   <tbody>
   <?php foreach ($shown as $r): ?>
-    <tr>
+    <tr class="team-row" data-id="<?= (int) $r['id'] ?>">
       <td class="rank"><?= $r['enough_data'] ? ++$rank : '–' ?></td>
       <td class="team">
         <a href="team.php?id=<?= (int) $r['id'] ?>">
@@ -124,7 +124,7 @@ View::header('Team rankings', 'index.php');
         <td class="viewers pending" colspan="2"><span>Not enough data</span><span class="sub"><?= (int) $r['tracked'] ?>/<?= Metrics::minTracked() ?> tracked</span></td>
       <?php endif; ?>
       <td class="num wr"><span class="k">Win rate </span><?= $r['played'] ? Format::pct($r['win_rate']) : '–' ?></td>
-      <td class="num tr"><span class="k">Tracked </span><?= (int) $r['tracked'] ?></td>
+      <td class="num tr"><span class="k">Tracked </span><?= (int) $r['tracked'] ?><button class="row-toggle" type="button" aria-expanded="false" aria-label="Show a summary of <?= Format::e($r['name']) ?>"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M4 6l4 4 4-4"/></svg></button></td>
     </tr>
   <?php endforeach; ?>
   </tbody>
@@ -134,4 +134,5 @@ View::header('Team rankings', 'index.php');
 <?php endif; ?>
 <p class="note">Teams that played in the last 120 days. A team is ranked once it has <?= Metrics::minTracked() ?>+ tracked matches; the rest follow, ordered by matches tracked, then win rate.</p>
 <?php endif; ?>
+<script src="assets/rankings.js"></script>
 <?php View::footer();

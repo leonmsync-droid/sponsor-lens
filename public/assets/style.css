@@ -225,6 +225,41 @@ table.rankings { width: 100%; border-collapse: separate; border-spacing: 0; font
 .rankings td.pending { color: var(--faint); font-size: 0.85rem; }
 .rankings td.pending .sub { display: block; color: var(--faint); }
 .rankings td.wr, .rankings td.tr { color: var(--muted); }
+
+/* Expandable rows: click a row for a short summary; the team name still opens the team page */
+.rankings tr.team-row { cursor: pointer; }
+.rankings td.tr { white-space: nowrap; }
+.row-toggle {
+  display: inline-grid; place-items: center; width: 26px; height: 26px; margin: -4px -6px -4px 10px; padding: 0; vertical-align: middle;
+  border: 0; border-radius: 50%; background: transparent; color: var(--faint); cursor: pointer;
+}
+.row-toggle svg { width: 14px; height: 14px; fill: none; stroke: currentColor; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; transition: transform .5s cubic-bezier(.32, .72, 0, 1); }
+.rankings tr.team-row:hover .row-toggle, .row-toggle:focus-visible { color: var(--text); background: var(--line); }
+.rankings tr.open .row-toggle svg { transform: rotate(180deg); }
+.rankings tr.open td { background: var(--raised); border-bottom-color: transparent; }
+.rankings tr.preview-row td { padding: 0; background: var(--raised); }
+.rankings tr.preview-row:hover td { background: var(--raised); }
+.preview-body {
+  display: grid; grid-template-columns: auto minmax(140px, 1fr) auto; gap: 18px 36px; align-items: end;
+  padding: 4px 16px 22px 64px;
+}
+.preview-loading { display: block; color: var(--faint); font-size: 0.85rem; padding-bottom: 18px; }
+.preview-verdict { grid-column: 1 / -1; margin: 0; max-width: 70ch; color: var(--muted); font-size: 0.95rem; }
+.preview-stats { display: grid; grid-template-columns: repeat(4, auto); justify-content: start; gap: 4px 28px; margin: 0; }
+.preview-stats dt { font-size: 0.75rem; font-weight: 600; color: var(--faint); margin-bottom: 4px; white-space: nowrap; }
+.preview-stats dd { margin: 0; font-weight: 700; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.preview-stats dd small { display: block; color: var(--faint); font-size: 0.75rem; font-weight: 600; }
+.preview-stats dd.form { display: flex; gap: 4px; }
+.preview-stats .badge { width: 20px; height: 20px; font-size: 0.68rem; border-radius: 5px; }
+.preview-spark { margin: 0; min-width: 0; }
+.preview-spark svg { display: block; width: 100%; height: 42px; overflow: visible; }
+.preview-spark polyline { fill: none; stroke: var(--accent); stroke-width: 1.8; stroke-linejoin: round; vector-effect: non-scaling-stroke; }
+.preview-spark figcaption { font-size: 0.72rem; color: var(--faint); margin-top: 6px; }
+.preview-body .button { padding: 8px 16px; font-size: 0.85rem; white-space: nowrap; }
+@media (max-width: 900px) {
+  .preview-body { grid-template-columns: 1fr auto; padding-left: 16px; }
+  .preview-stats { grid-column: 1 / -1; grid-template-columns: repeat(2, auto); gap: 12px 28px; }
+}
 .rankings .k { display: none; }
 .more { text-align: center; margin: 24px 0 0; }
 
@@ -413,4 +448,13 @@ dl.formulas dd p { margin: 8px 0; }
   .rankings td.tr { grid-area: tr; text-align: left; }
   .rankings td.wr, .rankings td.tr { font-size: 0.78rem; color: var(--faint); }
   .rankings .k { display: inline; }
+  .rankings tr.preview-row { display: block; padding: 0; border-bottom: 1px solid var(--line); }
+  .rankings tr.preview-row td { display: block; }
+  .rankings tr.open { border-bottom-color: transparent; }
+  .rankings tr.open td { background: none; }
+  .rankings tr.open, .rankings tr.preview-row { background: var(--raised); }
+  .preview-body { padding: 0 14px 18px 40px; }
+  .preview-spark { grid-column: 1 / -1; }
+  .preview-body .button { justify-self: start; }
+  .row-toggle { margin: -6px 0 -6px 6px; }
 }
