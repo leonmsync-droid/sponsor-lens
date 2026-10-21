@@ -47,6 +47,21 @@ $deleted = $db->run('DELETE FROM stream_samples WHERE sampled_at < ?', [gmdate('
 logline("$deleted raw samples older than 24h deleted");
 $db->setKv('last_summary_build', $now);
 
+// Headline figures for the RankPortfolio hub: counts only, no team or match details.
+$measured = (int) $db->value('SELECT COUNT(*) FROM audience_match_summary');
+$teams = (int) $db->value(
+    'SELECT COUNT(DISTINCT t) FROM (
+        SELECT m.team1_id AS t FROM matches m JOIN audience_match_summary a ON a.match_id = m.id
+        UNION ALL
+        SELECT m.team2_id FROM matches m JOIN audience_match_summary a ON a.match_id = m.id
+     ) x WHERE t IS NOT NULL'
+);
+file_put_contents(STORAGE_DIR . '/stats.json', json_encode([
+    'matches_measured' => $measured,
+    'teams_tracked' => $teams,
+    'updated_at' => gmdate('Y-m-d\TH:i:s\Z'),
+]));
+
 // Prune API response cache files older than a day (hourly sync URLs include timestamps, so they don't overwrite).
 $pruned = 0;
 foreach (glob(STORAGE_DIR . '/cache/ps_*.json') ?: [] as $file) {

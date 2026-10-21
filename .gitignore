@@ -9,3 +9,6 @@ storage/
 
 # Written by AutoSSL on the server
 public/.well-known/
+
+# Internal business notes — never commit or deploy
+docs/internal/
