@@ -47,7 +47,13 @@
   Chart.defaults.scale.border = { display: false };
   Chart.defaults.font.family = css.getPropertyValue('--font').trim() || 'system-ui';
   Chart.defaults.font.size = 12;
-  Chart.defaults.animation = reduceMotion ? false : { duration: 500 };
+  // Change only the duration: replacing the whole animation object drops Chart.js's easing,
+  // which left tooltips stuck almost invisible.
+  if (reduceMotion) {
+    Chart.defaults.animation = false;
+  } else {
+    Chart.defaults.animation.duration = 500;
+  }
   Chart.defaults.plugins.legend.display = false;
   Chart.defaults.plugins.tooltip.backgroundColor = color('--raised');
   Chart.defaults.plugins.tooltip.titleColor = color('--text');
@@ -64,22 +70,34 @@
     var fill = viewers.getContext('2d').createLinearGradient(0, 0, 0, viewers.clientHeight || 220);
     fill.addColorStop(0, color('--accent-soft'));
     fill.addColorStop(1, 'transparent');
+    // Real dates on the x axis (ms since 1970), so quiet spells show as gaps rather than evenly spaced points.
+    var GAP = 7 * 86400000;
+    var points = data.viewers.map(function (d) { return { x: d.at || Date.parse(d.date + 'T12:00:00Z'), y: d.viewers, opp: d.opp, league: d.league }; });
+    var first = points[0].x;
+    var last = points[points.length - 1].x;
     var datasets = [{
       label: 'Avg viewers',
-      data: data.viewers.map(function (d) { return d.viewers; }),
+      data: points,
+      segment: {
+        // Long breaks between matches: dotted and faint, so the line doesn't suggest viewers in between.
+        borderDash: function (s) { return s.p1.parsed.x - s.p0.parsed.x > GAP ? [1, 5] : undefined; },
+        borderColor: function (s) { return s.p1.parsed.x - s.p0.parsed.x > GAP ? color('--accent-dim') : undefined; }
+      },
+      borderCapStyle: 'round',
+      cubicInterpolationMode: 'monotone', // smooth, but never overshoots between same-day matches
       borderColor: color('--accent'),
       backgroundColor: fill,
       pointBackgroundColor: color('--accent'),
       fill: true,
-      tension: 0.35,
+      
       borderWidth: 2,
-      pointRadius: 2.5,
+      pointRadius: 2,
       pointHoverRadius: 5
     }];
     if (data.tierAvg) {
       datasets.push({
         label: data.tierLabel,
-        data: data.viewers.map(function () { return data.tierAvg; }),
+        data: [{ x: first, y: data.tierAvg }, { x: last, y: data.tierAvg }],
         borderColor: color('--faint'),
         borderDash: [3, 4],
         borderWidth: 1,
@@ -90,11 +108,34 @@
     }
     new Chart(viewers, {
       type: 'line',
-      data: { labels: data.viewers.map(function (d) { return shortDate(d.date); }), datasets: datasets },
+      data: { datasets: datasets },
       options: {
-        interaction: { mode: 'index', intersect: false },
-        scales: { x: xAxis, y: { beginAtZero: true, ticks: { precision: 0, maxTicksLimit: 4, color: color('--faint') } } },
-        plugins: { tooltip: { callbacks: { label: function (c) { return ' ' + c.dataset.label + ': ' + c.parsed.y.toLocaleString('en-GB'); } } } }
+        interaction: { mode: 'nearest', axis: 'x', intersect: false },
+        scales: {
+          x: Object.assign({}, xAxis, {
+            type: 'linear',
+            min: first === last ? first - 86400000 : first,
+            max: first === last ? last + 86400000 : last,
+            ticks: Object.assign({}, xAxis.ticks, {
+              callback: function (v) { return shortDate(new Date(v).toISOString().slice(0, 10)); }
+            })
+          }),
+          y: { beginAtZero: true, ticks: { precision: 0, maxTicksLimit: 4, color: color('--faint') } }
+        },
+        plugins: {
+          tooltip: {
+            filter: function (i) { return i.datasetIndex === 0; },
+            callbacks: {
+              title: function (items) { var d = new Date(items[0].parsed.x); return shortDate(d.toISOString().slice(0, 10)) + ', ' + d.toISOString().slice(11, 16) + ' UTC'; },
+              label: function (c) { return ' ' + c.parsed.y.toLocaleString('en-GB') + ' avg viewers'; },
+              afterLabel: function (c) {
+                var p = c.raw;
+                return [p.opp ? ' vs ' + p.opp : '', p.league || ''].filter(Boolean).join(' · ');
+              },
+              footer: function () { return data.tierAvg ? data.tierLabel + ': ' + data.tierAvg.toLocaleString('en-GB') : ''; }
+            }
+          }
+        }
       }
     });
   }

@@ -181,10 +181,22 @@ final class Metrics
             $rolling[] = ['date' => substr($m['played_at'], 0, 10), 'win_rate' => array_sum($window) / count($window)];
         }
 
+        // One point per tracked match, with the opponent and event for the chart tooltip.
+        $tracked = $this->trackedMatches($teamId);
+        $names = $tracked ? array_column($this->db->all(
+            'SELECT m.id, o.name AS opp, t.league_name AS league FROM matches m
+             JOIN tournaments t ON t.id = m.tournament_id
+             LEFT JOIN teams o ON o.id = IF(m.team1_id = ?, m.team2_id, m.team1_id)
+             WHERE m.id IN (' . implode(',', array_map('intval', array_column($tracked, 'id'))) . ')',
+            [$teamId]
+        ), null, 'id') : [];
         $viewers = array_map(fn($m) => [
             'date'    => substr($m['played_at'], 0, 10),
+            'at'      => strtotime($m['played_at'] . ' UTC') * 1000, // start time for the chart's date axis
             'viewers' => (int) $m['avg_viewers'],
-        ], $this->trackedMatches($teamId));
+            'opp'     => $names[$m['id']]['opp'] ?? null,
+            'league'  => $names[$m['id']]['league'] ?? null,
+        ], $tracked);
 
         $matchCols = "m.id, m.status, m.tier, m.team1_id, m.team2_id, m.team1_score, m.team2_score, m.winner_id, m.forfeit,
                       m.audience_note, COALESCE(m.begin_at, m.scheduled_at) AS played_at,

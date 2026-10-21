@@ -128,7 +128,7 @@ View::header($team['name']);
 <section class="charts">
   <div class="panel chart">
     <h2>Avg viewers per match</h2>
-    <p class="caption">Average live viewers on official streams for each tracked match<?= $enough && $team['expected'] ? ', against the average at ' . $against . ' (dashed)' : '' ?>.</p>
+    <p class="caption">One point per tracked match, spaced by date<?= $enough && $team['expected'] ? ', against the average at ' . $against . ' (dashed)' : '' ?>. A dotted line means no matches for over a week.</p>
     <?php if ($enough && $detail['viewers']): ?>
       <div class="canvas"><canvas id="viewers-chart" role="img" aria-label="Line chart of average viewers per tracked match"></canvas></div>
     <?php elseif (!$historyAvailable): ?>
@@ -234,5 +234,5 @@ View::header($team['name']);
     'winRate'   => $detail['rolling_win_rate'],
     'load'      => $load['weeks'] ?? [],
 ], JSON_HEX_TAG | JSON_HEX_AMP) ?></script>
-<script src="assets/team.js"></script>
+<script src="assets/team.js?v=<?= filemtime(__DIR__ . '/assets/team.js') ?>"></script>
 <?php View::footer();
