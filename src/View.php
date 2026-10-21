@@ -111,7 +111,7 @@ final class View
 
     public static function tierTag(?string $tier): string
     {
-        return '<span class="tier-tag">' . Verdict::tierLabel($tier) . '</span>';
+        return '<span class="tier-tag">' . Verdict::levelLabel($tier) . '</span>';
     }
 
     // Horizontal bar, 0–1. SVG attributes rather than inline styles, so the strict CSP still applies.

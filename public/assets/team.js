@@ -24,7 +24,7 @@
       }
       out.innerHTML = '≈ ' + money(fee / (views / 1000)) + ' <span>per 1,000 match views</span>';
       compare.textContent = tierViews > 0
-        ? 'A typical ' + form.dataset.tierLabel + ' team: ≈ ' + money(fee / (tierViews / 1000)) + ' per 1,000 at the same fee.'
+        ? 'A typical team at ' + form.dataset.tierLabel + ': ≈ ' + money(fee / (tierViews / 1000)) + ' per 1,000 at the same fee.'
         : '';
     };
     input.addEventListener('input', update);

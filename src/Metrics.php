@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 // All derived numbers shown on the site (formulas are mirrored on the Methodology page).
 //   Avg viewers per match   = mean of a match's 10-minute samples, summed across its official streams
-//   Tier average            = mean avg-viewers-per-match over all tracked matches in that tier this season
+//   Tier (event level) avg  = mean avg-viewers-per-match over all tracked matches in that tier this season
 //   vs tier average         = team avg ÷ expected − 1, where expected = mean of the tier averages of the tiers
 //                             the team's tracked matches were played in (= its tier average for single-tier teams)
 //   Win rate                = wins ÷ decided matches this season (forfeits excluded); trend = rolling last 10
@@ -138,6 +138,7 @@ final class Metrics
 
         return [
             'tier'          => $primary,
+            'tier_matches'  => $primary !== null ? ($tiers[$primary] ?? 0) : 0, // decided matches at that level
             'played'        => $r['played'],
             'wins'          => $r['wins'],
             'win_rate'      => $r['played'] ? $r['wins'] / $r['played'] : null,

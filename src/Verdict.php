@@ -4,12 +4,20 @@ declare(strict_types=1);
 // Plain-English verdict sentences, generated from the numbers by simple rules.
 final class Verdict
 {
+    // "C-tier events": PandaScore grades events, so a tier never describes a team on its own.
     public static function tierLabel(?string $tier): string
     {
-        return config('site.tier_labels')[$tier] ?? 'Unknown tier';
+        return config('site.tier_labels')[$tier] ?? 'unknown events';
     }
 
-    // Team page: compare with its own tier average, ±in_line_band counts as "in line".
+    // "Mid (C)", for the event level filter and averages.
+    public static function levelLabel(?string $tier): string
+    {
+        $name = config('site.level_names')[$tier] ?? null;
+        return $name ? $name . ' (' . strtoupper($tier) . ')' : 'Unknown';
+    }
+
+    // Team page: compare with the average at the same event levels, ±in_line_band counts as "in line".
     public static function team(array $t): string
     {
         $min = Metrics::minTracked();
@@ -20,11 +28,11 @@ final class Verdict
                 : $audience;
         }
 
-        $against = $t['compared_tier'] ? 'the ' . self::tierLabel($t['compared_tier']) . ' average' : 'the average for the tiers it plays in';
+        $against = $t['compared_tier'] ? 'the average at ' . self::tierLabel($t['compared_tier']) : 'the average at the event levels it plays at';
         $band = (float) config('site.in_line_band');
         $vs = $t['vs_tier'];
         if ($vs === null) {
-            return 'Not enough audience data yet to compare with its tier.';
+            return 'Not enough audience data yet to compare with similar events.';
         }
         if (abs($vs) <= $band) {
             return "Draws about as many viewers per match as $against (within ±" . Format::pct($band) . ').';
@@ -35,15 +43,15 @@ final class Verdict
     // Rankings: one sentence about the top of the filtered table.
     public static function rankings(array $rows, ?string $tier): string
     {
-        $scope = $tier ? self::tierLabel($tier) : 'tier-2 and tier-3';
+        $scope = $tier ? 'team most often at ' . self::tierLabel($tier) : 'tier-2 or tier-3 team';
         $leaders = array_values(array_filter($rows, fn($r) => $r['enough_data']));
         if (!$leaders) {
-            return "No $scope team has " . Metrics::minTracked() . ' tracked matches yet, so teams are ordered by matches tracked, then win rate. Audience figures fill in as matches are played.';
+            return "No $scope has " . Metrics::minTracked() . ' tracked matches yet, so teams are ordered by matches tracked, then win rate. Audience figures fill in as matches are played.';
         }
         $top = $leaders[0];
         $sentence = sprintf('%s leads, drawing %s viewers per match', $top['name'], Format::int($top['avg_viewers']));
         if ($top['vs_tier'] !== null && abs($top['vs_tier']) > (float) config('site.in_line_band')) {
-            $sentence .= sprintf(' — %s %s its tier average', Format::pct(abs($top['vs_tier'])), $top['vs_tier'] > 0 ? 'above' : 'below');
+            $sentence .= sprintf(' — %s %s the average at similar events', Format::pct(abs($top['vs_tier'])), $top['vs_tier'] > 0 ? 'above' : 'below');
         }
         return $sentence . sprintf('. %d %s enough data to rank.', count($leaders), count($leaders) === 1 ? 'team has' : 'teams have');
     }

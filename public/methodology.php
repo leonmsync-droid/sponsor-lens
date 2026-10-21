@@ -5,7 +5,7 @@ require __DIR__ . '/../src/bootstrap.php';
 
 $min = Metrics::minTracked();
 $band = Format::pct((float) config('site.in_line_band'));
-$tiers = implode(', ', array_map([Verdict::class, 'tierLabel'], array_merge(...array_column(config('games'), 'tiers'))));
+$tiers = implode(', ', array_map(fn($t) => strtoupper($t), array_merge(...array_column(config('games'), 'tiers'))));
 
 View::header('Methodology and data sources', 'methodology.php');
 ?>
@@ -18,7 +18,8 @@ View::header('Methodology and data sources', 'methodology.php');
 
 <h2>What's covered</h2>
 <ul>
-  <li>Counter-Strike 2, PandaScore tournament tiers: <?= $tiers ?>. Tier S and A events are excluded.</li>
+  <li>Counter-Strike 2 tournaments that PandaScore grades <?= $tiers ?>. S and A-tier events (the top of the scene) are excluded.</li>
+  <li>PandaScore grades <em>events</em>, not teams. Teams move between event levels often, so we never label a team with a tier; we only say which event level it has played most often this season, recalculated every hour.</li>
   <li>"This season" means matches since <?= Format::e(gmdate('j F Y', strtotime(season_start()))) ?>.</li>
   <li>All teams are treated the same, whatever their country. Audience figures are global for every team.</li>
 </ul>
@@ -39,18 +40,18 @@ View::header('Methodology and data sources', 'methodology.php');
     <p>With fewer than <?= $min ?> tracked matches we show "Not enough data" instead of a number.</p>
   </dd>
 
-  <dt id="tier-average">Tier average</dt>
+  <dt id="tier-average">Average by event level</dt>
   <dd>
-    <p class="formula-line">tier average = mean(avg viewers per match) over all tracked matches in that tier this season</p>
-    <p class="example">Example: Tier C matches averaging 900, 1,500 and 1,200 → tier average 1,200.</p>
+    <p class="formula-line">event level average = mean(avg viewers per match) over all tracked matches at that event level this season</p>
+    <p class="example">Example: C-tier event matches averaging 900, 1,500 and 1,200 → C-tier average 1,200.</p>
   </dd>
 
-  <dt id="vs-tier">Audience vs tier average</dt>
+  <dt id="vs-tier">Audience vs similar events</dt>
   <dd>
-    <p class="formula-line">vs tier average = (team avg ÷ tier average) − 1</p>
-    <p class="example">Example: team avg 1,656, tier average 1,200 → +38%.</p>
-    <p>Teams are only compared with their own tier. If a team's tracked matches span several tiers, its tier average is the mean of the tier averages of those matches, so a Tier B appearance is compared with Tier B.</p>
-    <p>Verdicts call a team "in line" with its tier when it is within ±<?= $band ?>.</p>
+    <p class="formula-line">vs similar events = (team avg ÷ average for the event levels of its matches) − 1</p>
+    <p class="example">Example: team avg 1,656, all its matches at C-tier events (average 1,200) → +38%.</p>
+    <p>Each match is compared with the average for its own event level, so a team that moves between levels is always compared fairly: its B-tier matches against B-tier events, its C-tier matches against C-tier events. Bigger events draw more viewers, so without this a team at smaller events would always look worse.</p>
+    <p>Verdicts call a team "in line" with similar events when it is within ±<?= $band ?>.</p>
   </dd>
 
   <dt id="win-rate">Win rate</dt>

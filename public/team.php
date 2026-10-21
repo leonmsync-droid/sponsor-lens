@@ -22,7 +22,7 @@ $enough = $team['enough_data'];
 $fee = isset($_GET['fee']) && is_numeric($_GET['fee']) && $_GET['fee'] > 0 ? (float) $_GET['fee'] : null;
 $live = $detail['live'];
 $historyAvailable = $metrics->tierAverages() !== []; // false when no summaries exist (e.g. table wiped)
-$against = $team['compared_tier'] ? Verdict::tierLabel($team['compared_tier']) : 'tier-weighted';
+$against = $team['compared_tier'] ? Verdict::tierLabel($team['compared_tier']) : 'its event levels';
 
 // Same fee spread over a typical team's views in the same tier(s), for the fee check comparison.
 $seasonViews = Metrics::seasonViews($team);
@@ -54,7 +54,7 @@ View::header($team['name']);
       <h1><?= Format::e($team['name']) ?></h1>
       <p class="meta">
         <?= View::flag($team['location'], 16) ?>
-        <?= Format::e(Format::country($team['location'])) ?> · <?= Verdict::tierLabel($team['tier']) ?>
+        <?= Format::e(Format::country($team['location'])) ?><?php if ($team['tier'] && !empty($team['tier_matches'])): ?> · Most often at <?= Verdict::tierLabel($team['tier']) ?> (<?= (int) $team['tier_matches'] ?> of <?= (int) $team['played'] ?> matches)<?php endif; ?>
       </p>
     </div>
   </div>
@@ -66,17 +66,17 @@ View::header($team['name']);
     <h2>Avg viewers per match</h2>
     <?php if ($enough): ?>
       <p class="figure"><?= Format::int($team['avg_viewers']) ?></p>
-      <p class="sub"><?= $team['expected'] ? Format::int($team['expected']) . ' ' . $against . ' average' : '' ?></p>
+      <p class="sub"><?= $team['expected'] ? Format::int($team['expected']) . ' average at ' . $against : '' ?></p>
     <?php else: ?>
       <?= View::progress((int) $team['tracked']) ?>
     <?php endif; ?>
     <?= View::formula('avg-viewers') ?>
   </div>
   <div class="card panel">
-    <h2>vs tier average</h2>
+    <h2>vs similar events</h2>
     <?php if ($enough): ?>
       <p class="figure"><?= View::delta($team['vs_tier']) ?></p>
-      <p class="sub">compared with <?= $against ?> teams</p>
+      <p class="sub">compared with the average at <?= $against ?></p>
     <?php else: ?>
       <?= View::progress((int) $team['tracked']) ?>
     <?php endif; ?>
@@ -113,7 +113,7 @@ View::header($team['name']);
       <p class="fee-result" id="fee-result"><?= $fee !== null ? '≈ ' . Format::money($perThousand($fee, $seasonViews)) . ' <span>per 1,000 match views</span>' : '<span>Enter a fee to see the cost per 1,000 match views</span>' ?></p>
       <p class="fee-compare" id="fee-compare"><?php
         if ($fee !== null && $tierViews) {
-            echo 'A typical ' . Format::e($against) . ' team: ≈ ' . Format::money($perThousand($fee, $tierViews)) . ' per 1,000 at the same fee.';
+            echo 'A typical team at ' . Format::e($against) . ': ≈ ' . Format::money($perThousand($fee, $tierViews)) . ' per 1,000 at the same fee.';
         } ?></p>
     </div>
     <p class="note">Estimate based on ≈ <?= Format::int($seasonViews) ?> match views this season (<?= Format::int($team['avg_viewers']) ?> avg viewers × <?= (int) $team['tracked'] ?> tracked matches). <?= View::formula('cost-per-1000', 'See the formula') ?></p>
@@ -128,7 +128,7 @@ View::header($team['name']);
 <section class="charts">
   <div class="panel chart">
     <h2>Avg viewers per match</h2>
-    <p class="caption">Average live viewers on official streams for each tracked match<?= $enough && $team['expected'] ? ', against the ' . $against . ' average (dashed)' : '' ?>.</p>
+    <p class="caption">Average live viewers on official streams for each tracked match<?= $enough && $team['expected'] ? ', against the average at ' . $against . ' (dashed)' : '' ?>.</p>
     <?php if ($enough && $detail['viewers']): ?>
       <div class="canvas"><canvas id="viewers-chart" role="img" aria-label="Line chart of average viewers per tracked match"></canvas></div>
     <?php elseif (!$historyAvailable): ?>
@@ -230,7 +230,7 @@ View::header($team['name']);
 <script type="application/json" id="team-data"><?= json_encode([
     'viewers'   => $enough ? $detail['viewers'] : [],
     'tierAvg'   => $enough && $team['expected'] ? (int) round($team['expected']) : null,
-    'tierLabel' => $against . ' average',
+    'tierLabel' => 'Average at ' . $against,
     'winRate'   => $detail['rolling_win_rate'],
     'load'      => $load['weeks'] ?? [],
 ], JSON_HEX_TAG | JSON_HEX_AMP) ?></script>

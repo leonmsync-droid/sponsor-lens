@@ -23,7 +23,7 @@ View::header('Team rankings', 'index.php');
 ?>
 <section class="hero panel has-art">
   <img class="hero-art" src="assets/hero-cs2.jpg" alt="" width="369" height="492">
-  <p class="eyebrow"><span class="tag">CS2 · This season</span> <?= $tier ? Verdict::tierLabel($tier) : 'Tiers ' . strtoupper(implode(', ', $tracked)) ?></p>
+  <p class="eyebrow"><span class="tag">CS2 · This season</span> <?= $tier ? 'Teams most often at ' . Verdict::tierLabel($tier) : 'Events graded ' . strtoupper(reset($tracked)) . ' to ' . strtoupper(end($tracked)) ?></p>
   <h1><span class="accent">Most watched</span> tier-2 and tier-3 CS2 teams</h1>
   <p class="lede">Live audience rankings from official Twitch and Kick streams, for sponsors and the teams they back.</p>
   <p class="verdict now"><span class="now-label">Right now</span><?= Format::e(Verdict::rankings($rows, $tier)) ?></p>
@@ -66,7 +66,7 @@ View::header('Team rankings', 'index.php');
     <span class="sub"><?= $ranked ? Format::e($ranked[0]['name']) . ' · avg per match' : 'Not enough data yet' ?></span>
   </div>
   <div class="stat panel wide">
-    <span class="label"><a href="methodology.php#tier-average">Tier averages</a></span>
+    <span class="label"><a href="methodology.php#tier-average">Average by event level</a></span>
     <span class="tier-avgs">
       <?php foreach ($tracked as $t): ?>
         <span><?= View::tierTag($t) ?><b><?= isset($tierAvg[$t]) ? Format::compact($tierAvg[$t]['avg']) : '–' ?></b></span>
@@ -77,10 +77,10 @@ View::header('Team rankings', 'index.php');
 </section>
 
 <nav class="filters" aria-label="Filter teams">
-  <div class="segmented" role="group" aria-label="Tier">
-    <a href="<?= Format::e($link(['tier' => null])) ?>"<?= $tier === null ? ' aria-current="true"' : '' ?>>All tiers</a>
+  <div class="segmented" role="group" aria-label="Event level">
+    <a href="<?= Format::e($link(['tier' => null])) ?>"<?= $tier === null ? ' aria-current="true"' : '' ?>>All events</a>
     <?php foreach ($tracked as $t): ?>
-      <a href="<?= Format::e($link(['tier' => $t])) ?>"<?= $tier === $t ? ' aria-current="true"' : '' ?>><?= Verdict::tierLabel($t) ?></a>
+      <a href="<?= Format::e($link(['tier' => $t])) ?>"<?= $tier === $t ? ' aria-current="true"' : '' ?> title="Teams most often at <?= Verdict::tierLabel($t) ?>"><?= Verdict::levelLabel($t) ?></a>
     <?php endforeach; ?>
   </div>
 </nav>
@@ -95,7 +95,7 @@ View::header('Team rankings', 'index.php');
       <th scope="col" class="rank">#</th>
       <th scope="col">Team</th>
       <th scope="col" class="viewers"><a href="methodology.php#avg-viewers">Avg viewers / match</a></th>
-      <th scope="col" class="num"><a href="methodology.php#vs-tier">vs tier avg</a></th>
+      <th scope="col" class="num"><a href="methodology.php#vs-tier">vs similar events</a></th>
       <th scope="col" class="num"><a href="methodology.php#win-rate">Win rate</a></th>
       <th scope="col" class="num"><a href="methodology.php#tracked">Tracked</a></th>
     </tr>
@@ -111,7 +111,6 @@ View::header('Team rankings', 'index.php');
         </a>
         <span class="meta">
           <?= View::flag($r['location']) ?>
-          <?= View::tierTag($r['tier']) ?>
         </span>
       </td>
       <?php if ($r['enough_data']): ?>
