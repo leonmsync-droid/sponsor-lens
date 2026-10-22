@@ -73,6 +73,35 @@ foreach (config('games') as $gameKey => $game) {
     logline("{$game['short']}: $matchCount matches synced");
 }
 
+// 3. The next CS2 Major (running or upcoming), for the countdown on the RankPortfolio hub.
+// A Major's main event is its own series, e.g. "PGL Major" + "Copenhagen 2024" or "IEM" + "Cologne Major 2026";
+// qualifiers and RMRs share the league but have a colon in their name. Kept out of the way if the API call fails.
+try {
+    $prefix = config('games')['cs2']['api_prefix'];
+    $majors = [];
+    foreach (['running', 'upcoming'] as $state) {
+        foreach ($ps->getAll("/$prefix/series/$state", ['per_page' => 100], 1800, 5) as $s) {
+            $league = $s['league']['name'] ?? '';
+            $name = $s['full_name'] ?? '';
+            if (stripos("$league $name", 'major') !== false && !str_contains($name, ':') && !preg_match('/qualifier|rmr/i', $name) && !empty($s['begin_at'])) {
+                $majors[] = [
+                    'name' => "$league $name",
+                    'begin_at' => $s['begin_at'],
+                    'end_at' => $s['end_at'] ?? null,
+                ];
+            }
+        }
+    }
+    usort($majors, fn($a, $b) => strcmp($a['begin_at'], $b['begin_at']));
+    file_put_contents(STORAGE_DIR . '/next_major.json', json_encode([
+        'major' => $majors[0] ?? null,
+        'checked_at' => gmdate('Y-m-d\TH:i:s\Z'),
+    ]));
+    logline('Next Major: ' . ($majors[0]['name'] ?? 'none listed yet'));
+} catch (Throwable $e) {
+    logline('Next Major check failed: ' . $e->getMessage());
+}
+
 $db->setKv('last_pandascore_sync', $now);
 Metrics::clearCache();
 logline("PandaScore requests: {$ps->requests}" . ($ps->remaining !== null ? ", remaining this hour: {$ps->remaining}" : ''));
